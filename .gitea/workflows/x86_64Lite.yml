@@ -84,7 +84,8 @@ jobs:
         cat $EXTERNAL_FILE >> openwrt/.config
         export FORCE_UNSAFE_CONFIGURE=1
         cd openwrt && make defconfig
-        [[ $(uname -m) =~ ^(arm64|aarch64|armv7l)$ ]] && sed -i 's|CONFIG_GOLANG_EXTERNAL_BOOTSTRAP_ROOT=".*"|CONFIG_GOLANG_EXTERNAL_BOOTSTRAP_ROOT="/usr/bin/go"|' .config || sed -i '/CONFIG_DEFAULT_luci/d' .config
+        sed -i '/CONFIG_DEFAULT_luci/d' .config
+        [[ $(uname -m) =~ ^(arm64|aarch64|armv7l)$ ]] && sed -i 's|CONFIG_GOLANG_EXTERNAL_BOOTSTRAP_ROOT=".*"|CONFIG_GOLANG_EXTERNAL_BOOTSTRAP_ROOT="/usr/bin/go"|' .config || echo "amd64: No need to modify go"
         cat .config
 
     - name: Download package
