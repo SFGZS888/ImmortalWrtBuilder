@@ -32,7 +32,7 @@ jobs:
         DEBIAN_FRONTEND: noninteractive
       run: |
         sudo rm -rf /etc/apt/sources.list.d/* 
-        [[ $(uname -m) =~ ^(arm64|aarch64|armv7l)$ ]] sudo -E dpkg --add-architecture armhf || echo "amd64: No need to add armhf"
+        [[ $(uname -m) =~ ^(arm64|aarch64|armv7l)$ ]] && sudo -E dpkg --add-architecture armhf || echo "amd64: No need to add armhf"
         sudo -E apt-get -qq update
         sudo -E apt-get -qq install $(bash <(curl -s https://gitea.9218888.xyz/dysf888/OpenWrtBuilder/raw/branch/main/openwrt-env.sh))
         sudo -E apt-get -qq autoremove --purge
