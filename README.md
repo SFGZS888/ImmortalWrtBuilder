@@ -1,6 +1,8 @@
 # Action Openwrt 云自动编译
 ⏰ **每周自动拉取最新源码自动编译**
 
+[![X86_64](https://gitea.9218888.xyz/dysf888/OpenWrtBuilder/actions/workflows/x86_64.yml/badge.svg?branch=main)](https://gitea.9218888.xyz/dysf888/OpenWrtBuilder/actions?workflow=x86_64.yml)
+[![x86_64Lite](https://gitea.9218888.xyz/dysf888/OpenWrtBuilder/actions/workflows/x86_64Lite.yml/badge.svg?branch=main)](https://gitea.9218888.xyz/dysf888/OpenWrtBuilder/actions?workflow=x86_64Lite.yml)
 [![Contributors][contributors-shield]][contributors-url]
 [![Forks][forks-shield]][forks-url]
 [![Stargazers][stars-shield]][stars-url]
