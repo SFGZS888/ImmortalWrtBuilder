@@ -20,7 +20,7 @@ env:
 
 jobs:
   build:
-    runs-on: big
+    runs-on: self-hosted
 
     steps:
     - name: Checkout
