@@ -27,7 +27,6 @@ jobs:
       uses: actions/checkout@v4
 
     - name: Clone source code
-      working-directory: /mnt/workdir
       run: |
         df -hT $PWD
         git clone --depth 1 $REPO_URL -b $REPO_BRANCH openwrt
