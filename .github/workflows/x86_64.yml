@@ -20,17 +20,16 @@ env:
 
 jobs:
   build:
-    runs-on: self-hosted
+    runs-on: big
     steps:
     - name: Checkout
       uses: actions/checkout@v4
 
     - name: Clone source code
-      working-directory: ~
       run: |
         df -hT $PWD
         git clone --depth 1 $REPO_URL -b $REPO_BRANCH openwrt
-        ln -sf /mnt/workdir/openwrt $GITHUB_WORKSPACE/openwrt
+        ln -sf ./openwrt $GITHUB_WORKSPACE/openwrt
 
     - name: Cache
       uses: stupidloud/cachewrtbuild@main
