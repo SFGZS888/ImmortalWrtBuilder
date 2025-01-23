@@ -1,0 +1,36 @@
+name: Test Release
+
+on:
+  repository_dispatch:
+  workflow_dispatch:
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Create test file
+      run: |
+        echo "This is a test file." > test.test
+
+    - name: Generate release tag
+      id: tag
+      run: |
+        echo "release_tag=$(date +"%Y.%m.%d-%H%M%S")" >> $GITHUB_OUTPUT
+
+    - name: Generate release body
+      run: |
+        echo "This is a test release." > release.txt
+
+    - name: Upload test file to release
+      uses: softprops/action-gh-release@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        name: Test Release
+        tag_name: ${{ steps.tag.outputs.release_tag }}
+        body_path: release.txt
+        files: test.test
