@@ -20,6 +20,9 @@ echo "src-git passwall2 https://github.com/xiaorouji/openwrt-passwall2.git;main"
 # iStore
 echo "src-git istore https://github.com/linkease/istore;main" >> feeds.conf.default
 
+# 5G
+echo "scr-git 5g https://github.com/Siriling/5G-Modem-Support" >> feeds.conf.default
+
 # 替换默认主题
 rm -rf package/lean/luci-theme-argon 
 git clone -b 18.06 https://github.com/jerrykuku/luci-theme-argon.git  package/lean/luci-theme-argon
