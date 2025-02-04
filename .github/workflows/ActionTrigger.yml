@@ -1,28 +1,28 @@
 name: ActionTrigger
 
 env:
-  REPO_URL: https://github.com/coolsnowwolf/lede
+  REPO_URL: https://github.com/immortalwrt/immortalwrt
   REPO_BRANCH: master
   UPLOAD_RELEASE: true
 
 on:
-  #schedule:
-  #  - cron: '55 5 * * *'
+  schedule:
+   - cron: '55 5 * * *'
   workflow_dispatch:
 
 jobs:
-  My-Gitea-Actions:
-    runs-on: ubuntu-latest
+  Self-hosted-Actions:
+    runs-on: big
 
     steps:
     - name: Checkout
       uses: actions/checkout@v4
       
     - name: AutoTrigger
-      uses: bigbugcc/ActionBot@main
+      uses: dysf888/ActionBot@main
 
     - name: Delete workflow runs
-      uses: bigbugcc/delete-workflow-runs@main
+      uses: dysf888/delete-workflow-runs@main
       with:
         keep_minimum_runs: 1
 
@@ -30,7 +30,7 @@ jobs:
       uses: dev-drprasad/delete-older-releases@v0.2.0
       if: env.UPLOAD_RELEASE == 'true' && !cancelled()
       with:
-        keep_latest: 9
+        keep_latest: 5
         delete_tags: true
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
