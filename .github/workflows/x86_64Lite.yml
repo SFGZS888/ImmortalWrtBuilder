@@ -5,9 +5,9 @@ on:
   workflow_dispatch:
 
 env:
-  OPNAME: 'x86_64Lite'
-  REPO_URL: https://github.com/coolsnowwolf/lede
-  REPO_BRANCH: master
+  IPNAME: 'x86_64Lite'
+  REPO_URL: https://github.com/immortalwrt/immortalwrt
+  REPO_BRANCH: v23.05.4
   FEEDS_CONF: feeds.conf.default
   EXTERNAL_FILE: configs/luci/Lite.config
   CONFIG_FILE: configs/x86_64.config
@@ -29,8 +29,8 @@ jobs:
     - name: Clone source code
       run: |
         df -hT $PWD
-        git clone --depth 1 $REPO_URL -b $REPO_BRANCH openwrt
-        ln -sf ./openwrt $GITHUB_WORKSPACE/openwrt
+        git clone --depth 1 $REPO_URL -b $REPO_BRANCH immortalwrt
+        ln -sf ./immortalwrt $GITHUB_WORKSPACE/immortalwrt
 
     - name: Cache
       uses: stupidloud/cachewrtbuild@main
@@ -38,46 +38,46 @@ jobs:
           ccache: 'true'
           toolchain: 'true'
           mixkey: 'x86'
-          prefix: 'openwrt'
+          prefix: 'immortalwrt'
 
     - name: Load custom feeds
       run: |
-        [ -e $FEEDS_CONF ] && mv $FEEDS_CONF openwrt/feeds.conf.default
+        [ -e $FEEDS_CONF ] && mv $FEEDS_CONF immortalwrt/feeds.conf.default
         chmod +x $SYS_CONF_SH
-        cd openwrt
+        cd immortalwrt
         $GITHUB_WORKSPACE/$SYS_CONF_SH
 
     - name: Update feeds
-      run: cd openwrt && ./scripts/feeds update -a
+      run: cd immortalwrt && ./scripts/feeds update -a
 
     - name: Install feeds
-      run: cd openwrt && ./scripts/feeds install -a
+      run: cd immortalwrt && ./scripts/feeds install -a
 
     - name: Load custom configuration
       run: |
-        [ -e files ] && mv files openwrt/files
-        [ -e $CONFIG_FILE ] && mv $CONFIG_FILE openwrt/.config
+        [ -e files ] && mv files immortalwrt/files
+        [ -e $CONFIG_FILE ] && mv $CONFIG_FILE immortalwrt/.config
         chmod +x $PACKS
-        cd openwrt
+        cd immortalwrt
         $GITHUB_WORKSPACE/$PACKS
 
     - name: Extend Driver
       if: env.EXTEND_DRIVER == 'true'
       run: |
-        cat configs/Driver.config >> openwrt/.config
+        cat configs/Driver.config >> immortalwrt/.config
 
     - name: Modify configuration
       run: |
-        cat $EXTERNAL_FILE >> openwrt/.config
+        cat $EXTERNAL_FILE >> immortalwrt/.config
         export FORCE_UNSAFE_CONFIGURE=1
-        cd openwrt && make defconfig
+        cd immortalwrt && make defconfig
         sed -i '/CONFIG_DEFAULT_luci/d' .config
         cat .config
 
     - name: Download package
       id: package
       run: |
-        cd openwrt
+        cd immortalwrt
         export FORCE_UNSAFE_CONFIGURE=1
         make download -j$(nproc)
         find dl -size -1024c -exec ls -l {} \;
@@ -86,7 +86,7 @@ jobs:
     - name: Compile the firmware
       id: compile
       run: |
-        cd openwrt
+        cd immortalwrt
         echo -e "$(nproc) thread compile"
         export FORCE_UNSAFE_CONFIGURE=1
         IGNORE_ERRORS=m make -j$(nproc) clean world
@@ -103,14 +103,14 @@ jobs:
       uses: actions/upload-artifact@main
       if: steps.compile.outputs.status == 'success' && env.UPLOAD_BIN_DIR == 'true'
       with:
-        name: OpenWrt_bin${{ env.DEVICE_NAME }}${{ env.FILE_DATE }}
-        path: openwrt/bin
+        name: immortalwrt_bin${{ env.DEVICE_NAME }}${{ env.FILE_DATE }}
+        path: immortalwrt/bin
 
     - name: Organize files
       id: organize
       if: steps.compile.outputs.status == 'success' && env.UPLOAD_FIRMWARE == 'true' && !cancelled()
       run: |
-        cd openwrt/bin/targets/*/*
+        cd immortalwrt/bin/targets/*/*
         rm -rf packages
         echo "FIRMWARE=$PWD" >> $GITHUB_ENV
         echo "status=success" >> $GITHUB_OUTPUT
@@ -119,7 +119,7 @@ jobs:
       uses: actions/upload-artifact@main
       if: steps.organize.outputs.status == 'success' && !cancelled()
       with:
-        name: OpenWrt_firmware${{ env.DEVICE_NAME }}${{ env.FILE_DATE }}
+        name: immortalwrt_firmware${{ env.DEVICE_NAME }}${{ env.FILE_DATE }}
         path: ${{ env.FIRMWARE }}
 
     - name: Generate release tag
@@ -142,7 +142,7 @@ jobs:
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
-        name: ${{ env.OPNAME }}
+        name: ${{ env.IPNAME }}
         tag_name: ${{ steps.tag.outputs.release_tag }}
         body_path: release.txt
         files: ${{ env.FIRMWARE }}/*
