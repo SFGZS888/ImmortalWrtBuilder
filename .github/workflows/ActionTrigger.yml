@@ -2,7 +2,7 @@ name: ActionTrigger
 
 env:
   REPO_URL: https://github.com/immortalwrt/immortalwrt
-  REPO_BRANCH: master
+  REPO_BRANCH: v23.05.4
   UPLOAD_RELEASE: true
 
 on:
@@ -24,10 +24,10 @@ jobs:
     - name: Delete workflow runs
       uses: dysf888/delete-workflow-runs@main
       with:
-        keep_minimum_runs: 1
+        keep_minimum_runs: 7
 
     - name: Remove old Releases
-      uses: dev-drprasad/delete-older-releases@v0.2.0
+      uses: dev-drprasad/delete-older-releases@v0.3.4
       if: env.UPLOAD_RELEASE == 'true' && !cancelled()
       with:
         keep_latest: 5
