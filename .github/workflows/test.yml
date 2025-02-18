@@ -1,0 +1,50 @@
+name: Test sed command
+
+on:
+  push:
+    branches:
+      - main 
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: big
+
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v4
+      
+    - name: Initialization environment
+      env:
+        DEBIAN_FRONTEND: noninteractive
+      run: |
+        ARCH=$(uname -m)
+        if [[ "$ARCH" == "x86_64" || "$ARCH" == "amd64" || "$ARCH" == "i386" || "$ARCH" == "i686" ]]; then
+          sudo rm -rf /etc/apt/sources.list.d/*
+          sudo -E apt-get -qq update
+          sudo -E apt-get -qq install $(curl -fsSL https://raw.githubusercontent.com/SFGZS888/ImmortalWrtBuilder/refs/heads/main/env-amd64)
+          sudo -E apt-get -qq autoremove --purge
+          sudo -E apt-get -qq clean
+        fi
+        
+    - name: Run sed command
+      id: sed-test
+      run: |
+          # 创建一个测试文件
+          echo "Hello World" > test.txt
+
+          # 使用 sed 替换文本
+          sed -i 's/World/GitHub Actions/' test.txt
+
+          # 检查替换后的内容
+          if grep -q "Hello GitHub Actions" test.txt; then
+            echo "::notice::sed command succeeded!"
+          else
+            echo "::error::sed command failed!"
+            exit 1
+          fi
+
+    - name: Print test file content
+      run: cat test.txt
