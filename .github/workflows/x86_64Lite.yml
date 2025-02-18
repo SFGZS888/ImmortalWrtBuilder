@@ -32,11 +32,8 @@ jobs:
       run: |
         ARCH=$(uname -m)
         if [[ "$ARCH" == "x86_64" || "$ARCH" == "amd64" || "$ARCH" == "i386" || "$ARCH" == "i686" ]]; then
-          sudo rm -rf /etc/apt/sources.list.d/*
-          sudo -E apt-get -qq update
-          sudo -E apt-get -qq install $(curl -fsSL https://raw.githubusercontent.com/SFGZS888/ImmortalWrtBuilder/refs/heads/main/env-amd64)
-          sudo -E apt-get -qq autoremove --purge
-          sudo -E apt-get -qq clean
+          sudo -E apt-get update
+          sudo -E apt-get install -y $(curl -fsSL https://raw.githubusercontent.com/SFGZS888/ImmortalWrtBuilder/refs/heads/main/env-amd64)
         fi
 
     - name: Clone source code
