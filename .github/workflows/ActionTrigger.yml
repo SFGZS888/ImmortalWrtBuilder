@@ -22,9 +22,10 @@ jobs:
       uses: dysf888/ActionBot@main
 
     - name: Delete workflow runs
-      uses: dysf888/delete-workflow-runs@main
+      uses: GitRML/delete-workflow-runs@main
       with:
-        keep_minimum_runs: 7
+        retain_days: 3
+        keep_minimum_runs: 3
 
     - name: Remove old Releases
       uses: dev-drprasad/delete-older-releases@v0.3.4
