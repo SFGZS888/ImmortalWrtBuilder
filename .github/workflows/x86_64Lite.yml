@@ -26,15 +26,15 @@ jobs:
     - name: Checkout
       uses: actions/checkout@v4
       
-    - name: Initialization environment
-      env:
-        DEBIAN_FRONTEND: noninteractive
-      run: |
-        ARCH=$(uname -m)
-        if [[ "$ARCH" == "x86_64" || "$ARCH" == "amd64" || "$ARCH" == "i386" || "$ARCH" == "i686" ]]; then
-          sudo -E apt-get update
-          sudo -E apt-get install -y $(curl -fsSL https://raw.githubusercontent.com/SFGZS888/ImmortalWrtBuilder/refs/heads/main/env-amd64)
-        fi
+    # - name: Initialization environment
+    #   env:
+    #     DEBIAN_FRONTEND: noninteractive
+    #   run: |
+    #     ARCH=$(uname -m)
+    #     if [[ "$ARCH" == "x86_64" || "$ARCH" == "amd64" || "$ARCH" == "i386" || "$ARCH" == "i686" ]]; then
+    #       sudo -E apt-get update
+    #       sudo -E apt-get install -y $(curl -fsSL https://raw.githubusercontent.com/SFGZS888/ImmortalWrtBuilder/refs/heads/main/env-amd64)
+    #     fi
 
     - name: Clone source code
       run: |
